@@ -1,150 +1,269 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Beleza Pura</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-body { font-family: 'Roboto', sans-serif; margin: 0; background: #fff8f5; }
-.banner { background: linear-gradient(135deg, #b85c5c, #d4a017); color: white; text-align: center; padding: 30px; }
-.promo { background: #d4a017; color: white; text-align: center; padding: 10px; font-weight: bold; }
-.urgencia { text-align: center; color: #b85c5c; margin: 5px; }
-#catalogo { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
-.produto { background: white; border-radius: 16px; margin: 10px; width: 240px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-.produto img { width: 100%; height: 200px; object-fit: contain; border-radius: 10px; }
-.nome { font-weight: bold; margin: 10px 0; }
-.preco { color: #b85c5c; font-size: 20px; font-weight: bold; }
-.botao-comprar { width: 100%; padding: 10px; border: none; border-radius: 20px; margin-top: 5px; cursor: pointer; }
-.adicionar { background: #d4a017; color: white; }
-.comprar-direto { background: #b85c5c; color: white; }
-#icone-carrinho { position: fixed; top: 10px; right: 10px; background: #b85c5c; color: white; padding: 10px; border-radius: 20px; cursor: pointer; }
-#carrinho { position: fixed; top: 50px; right: 10px; background: white; width: 260px; padding: 10px; border-radius: 10px; display: none; }
-.qtd-btn { padding: 2px 6px; margin: 2px; cursor: pointer; }
-#carrinho li { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-@media (max-width:600px) { .produto { width: 90%; } }
+body { font-family: Arial; margin:0; background:#fff8f5; }
+
+.banner {
+  background:linear-gradient(135deg,#b85c5c,#d4a017);
+  color:#fff;
+  text-align:center;
+  padding:30px;
+}
+
+.promo {
+  background:#d4a017;
+  color:#fff;
+  text-align:center;
+  padding:10px;
+  font-weight:bold;
+}
+
+#destaque-produto {
+  margin:20px;
+  padding:20px;
+  background:#fff;
+  border-radius:12px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
+
+#destaque-produto img {
+  width:100%;
+  max-height:250px;
+  object-fit:contain;
+}
+
+.categoria { margin:20px; }
+.categoria h2 { color:#b85c5c; }
+
+.carrossel {
+  display:flex;
+  overflow-x:auto;
+  gap:10px;
+}
+
+.produto {
+  min-width:200px;
+  background:#fff;
+  border-radius:10px;
+  padding:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.produto img { width:100%; height:150px; object-fit:contain; }
+
+.botao {
+  width:100%;
+  margin-top:5px;
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  cursor:pointer;
+}
+
+.add { background:#d4a017; }
+.buy { background:#b85c5c; }
+
+#icone {
+  position:fixed;
+  top:10px;
+  right:10px;
+  background:#b85c5c;
+  color:#fff;
+  padding:10px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+#carrinho {
+  position:fixed;
+  right:10px;
+  top:50px;
+  width:280px;
+  background:#fff;
+  padding:10px;
+  border-radius:10px;
+  display:none;
+  box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+#carrinho li {
+  margin-bottom:10px;
+  border-bottom:1px solid #eee;
+  padding-bottom:5px;
+}
+
+.whatsapp-float {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25d366;
+  color:#fff;
+  padding:15px;
+  border-radius:50%;
+  font-size:20px;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<div class="banner"><h1>Beleza Pura</h1><p>Descubra sua beleza</p></div>
-<div class="promo">🔥 TUDO 50% OFF 🔥</div>
-<div class="urgencia">⚡ Aproveite hoje</div>
+<div class="banner">
+  <h1>Beleza Pura</h1>
+  <p>Realce sua beleza todos os dias</p>
+</div>
 
+<div class="promo">
+🔥 TUDO 50% OFF • 🚚 Frete a partir de R$ 8 • 💳 Pix e Cartão
+</div>
+
+<div id="destaque-produto"></div>
 <div id="catalogo"></div>
 
-<div id="icone-carrinho">🛒 <span id="contador">0</span></div>
+<div id="icone">🛒 <span id="count">0</span></div>
 
 <div id="carrinho">
-<h3>Carrinho</h3>
 <ul id="lista"></ul>
 <p id="total"></p>
 
-<label>Pagamento:</label>
 <select id="pagamento">
 <option>Pix</option>
 <option>Cartão</option>
 <option>Dinheiro</option>
 </select>
 
-<div id="parcelas-box" style="display:none">
+<div id="parcelasBox" style="display:none">
 <select id="parcelas">
-<option value="1">1x</option>
-<option value="2">2x</option>
-<option value="3">3x</option>
-<option value="6">6x</option>
+<option>1x</option>
+<option>2x</option>
+<option>3x</option>
+<option>6x</option>
 </select>
 </div>
 
-<a id="whatsapp" target="_blank">Finalizar pedido no WhatsApp</a>
+<br><br>
+<a id="zap" target="_blank" style="background:#25d366; padding:10px; color:#fff; border-radius:8px; display:block; text-align:center;">
+Finalizar pedido
+</a>
 </div>
+
+<div class="whatsapp-float" onclick="abrirWhats()">💬</div>
 
 <script>
 const url = "https://docs.google.com/spreadsheets/d/14jIYmfNIoLSxvnBuHMByplsNXLtD_kC0WFlOmEYWwEk/gviz/tq?tqx=out:json&sheet=Nome";
 
 let carrinho = [];
 let total = 0;
+let produtoDestaque = null;
 
-const icone = document.getElementById("icone-carrinho");
-const carrinhoDiv = document.getElementById("carrinho");
-const lista = document.getElementById("lista");
-const contador = document.getElementById("contador");
-const whatsapp = document.getElementById("whatsapp");
-
-icone.onclick = () => {
-  carrinhoDiv.style.display = carrinhoDiv.style.display === 'block' ? 'none' : 'block';
+document.getElementById("icone").onclick = () => {
+  const c = document.getElementById("carrinho");
+  c.style.display = c.style.display === "block" ? "none" : "block";
 };
 
 function atualizar() {
+  const lista = document.getElementById("lista");
   lista.innerHTML = "";
 
   const agrupado = {};
 
-  carrinho.forEach(item => {
-    if (!agrupado[item.nome]) {
-      agrupado[item.nome] = { ...item, qtd: 1 };
-    } else {
-      agrupado[item.nome].qtd++;
-    }
+  carrinho.forEach(i=>{
+    if(!agrupado[i.nome]) agrupado[i.nome]={...i,qtd:1};
+    else agrupado[i.nome].qtd++;
   });
 
-  Object.values(agrupado).forEach(item => {
+  Object.values(agrupado).forEach(i=>{
     const li = document.createElement("li");
+
     li.innerHTML = `
-      ${item.nome}<br>
-      Qtd: ${item.qtd}<br>
-      R$ ${(item.preco * item.qtd).toFixed(2)}<br>
-      <button class="qtd-btn" onclick="alterarQtd('${item.nome}', -1)">-</button>
-      <button class="qtd-btn" onclick="alterarQtd('${item.nome}', 1)">+</button>
+      <strong>${i.nome}</strong><br>
+      Qtd: ${i.qtd} | R$ ${(i.preco*i.qtd).toFixed(2)}<br>
+      <button onclick="alt('${i.nome}',-1)">-</button>
+      <button onclick="alt('${i.nome}',1)">+</button>
+      <button onclick="remover('${i.nome}')">❌</button>
     `;
+
     lista.appendChild(li);
   });
 
-  contador.textContent = carrinho.length;
-  document.getElementById("total").textContent = "Total: R$ " + total.toFixed(2);
+  document.getElementById("count").textContent = carrinho.length;
+  document.getElementById("total").innerHTML =
+    "<strong>Total: R$ "+total.toFixed(2)+"</strong>";
 
-  const formaPagamento = document.getElementById("pagamento").value;
-  const parcelas = document.getElementById("parcelas").value;
+  const pag = document.getElementById("pagamento").value;
+  const parc = document.getElementById("parcelas").value;
 
-  const listaProdutos = Object.values(agrupado)
-    .map(i => `• ${i.nome} (x${i.qtd}) - R$ ${(i.preco * i.qtd).toFixed(2)}`)
-    .join("\n");
+  const pedidoId = Date.now();
+
+  const txt = Object.values(agrupado)
+    .map(i=>`• ${i.nome} (x${i.qtd}) - R$ ${(i.preco*i.qtd).toFixed(2)}`)
+    .join("\\n");
 
   const msg = encodeURIComponent(
-    "🛍️ Pedido - Beleza Pura\n\n" +
-    listaProdutos +
-    "\n\n💰 Total: R$ " + total.toFixed(2) +
-    "\n💳 Pagamento: " + formaPagamento +
-    (formaPagamento === "Cartão" ? ` (${parcelas}x)` : "")
+    "🛍️ *Pedido Beleza Pura*\\n" +
+    "📌 Pedido #" + pedidoId + "\\n\\n" +
+    txt +
+    "\\n\\n💰 Total: R$ " + total.toFixed(2) +
+    "\\n🚚 Frete: a partir de R$ 8" +
+    "\\n💳 Pagamento: " + pag +
+    (pag==="Cartão" ? ` (${parc}x)` : "") +
+    "\\n\\n📲 Envie o QR Code para pagamento."
   );
 
-  whatsapp.href = "https://wa.me/5511948523462?text=" + msg;
+  document.getElementById("zap").href =
+    "https://wa.me/5511948523462?text="+msg;
 }
 
-function alterarQtd(nome, delta) {
-  const index = carrinho.findIndex(i => i.nome === nome);
+function alt(nome,delta){
+  const i = carrinho.findIndex(x=>x.nome===nome);
+  if(i===-1) return;
 
-  if (index !== -1) {
-    if (delta === 1) {
-      carrinho.push(carrinho[index]);
-      total += carrinho[index].preco;
-    } else {
-      total -= carrinho[index].preco;
-      carrinho.splice(index, 1);
-    }
-  }
+  if(delta==1){ carrinho.push(carrinho[i]); total+=carrinho[i].preco; }
+  else{ total-=carrinho[i].preco; carrinho.splice(i,1); }
 
   atualizar();
 }
 
-const pagamentoSelect = document.getElementById("pagamento");
-const parcelasBox = document.getElementById("parcelas-box");
+function remover(nome){
+  carrinho = carrinho.filter(i=>i.nome!==nome);
+  total = carrinho.reduce((s,i)=>s+i.preco,0);
+  atualizar();
+}
 
-pagamentoSelect.addEventListener("change", () => {
-  parcelasBox.style.display = pagamentoSelect.value === "Cartão" ? "block" : "none";
-});
+document.getElementById("pagamento").onchange = e=>{
+  document.getElementById("parcelasBox").style.display =
+    e.target.value==="Cartão"?"block":"none";
+};
+
+function abrirWhats(){
+  window.open("https://wa.me/5511948523462");
+}
+
+// prova social
+setInterval(()=>{
+  const nomes = ["Maria","João","Ana","Carlos"];
+  const nome = nomes[Math.floor(Math.random()*nomes.length)];
+
+  const aviso = document.createElement("div");
+  aviso.innerText = `${nome} acabou de comprar!`;
+  aviso.style.position="fixed";
+  aviso.style.bottom="80px";
+  aviso.style.left="20px";
+  aviso.style.background="#b85c5c";
+  aviso.style.color="#fff";
+  aviso.style.padding="10px";
+  aviso.style.borderRadius="8px";
+
+  document.body.appendChild(aviso);
+  setTimeout(()=>aviso.remove(),3000);
+},8000);
 
 fetch(url)
 .then(r=>r.text())
@@ -152,49 +271,74 @@ fetch(url)
   const json = JSON.parse(data.substr(47).slice(0,-2));
   const rows = json.table.rows;
 
-  rows.sort((a,b)=> (a.c[3]?.v||0)-(b.c[3]?.v||0));
+  const categorias = {};
 
   rows.forEach(r=>{
-    const nome = r.c[0]?.v || "";
-    const foto = r.c[1]?.v || "";
+    const nome = r.c[0]?.v;
+    const foto = r.c[1]?.v;
     const preco = parseFloat(r.c[3]?.v)||0;
+    const status = r.c[4]?.v?.toLowerCase();
+    const cat = r.c[5]?.v || "Outros";
 
-    const destaque = preco <= 50;
+    if(status==="indisponível") return;
 
-    const div = document.createElement("div");
-    div.className = "produto";
+    if(!produtoDestaque && preco>0){
+      produtoDestaque = {nome,foto,preco};
+    }
 
-    div.innerHTML = `
-      ${destaque ? '<div class="selo">🔥 Oferta</div>' : ''}
-      <img src="${foto}" alt="${nome}">
-      <div class="nome">${nome}</div>
-      <div class="preco">R$ ${preco.toFixed(2)}</div>
-      <button class="botao-comprar adicionar">🛒 Adicionar e continuar comprando</button>
-      <button class="botao-comprar comprar-direto">⚡ Comprar agora no WhatsApp</button>
-    `;
-
-    div.querySelector(".adicionar").onclick = () => {
-      carrinho.push({nome, preco});
-      total += preco;
-      atualizar();
-    };
-
-    div.querySelector(".comprar-direto").onclick = () => {
-      const msg = encodeURIComponent(
-        "🛍️ Pedido - Beleza Pura\n\n" +
-        `• ${nome} - R$ ${preco.toFixed(2)}` +
-        "\n\n💳 Pagamento: a combinar"
-      );
-
-      window.open("https://wa.me/5511948523462?text=" + msg, "_blank");
-    };
-
-    document.getElementById("catalogo").appendChild(div);
+    if(!categorias[cat]) categorias[cat]=[];
+    categorias[cat].push({nome,foto,preco});
   });
-})
-.catch(err => console.error("Erro:", err));
+
+  if(produtoDestaque){
+    document.getElementById("destaque-produto").innerHTML = `
+      <h2>🔥 Mais Vendido</h2>
+      <img src="${produtoDestaque.foto}">
+      <h3>${produtoDestaque.nome}</h3>
+      <p>R$ ${produtoDestaque.preco.toFixed(2)}</p>
+    `;
+  }
+
+  Object.keys(categorias).forEach(cat=>{
+    const sec = document.createElement("div");
+    sec.className="categoria";
+    sec.innerHTML=`<h2>${cat}</h2><div class="carrossel"></div>`;
+
+    const car = sec.querySelector(".carrossel");
+
+    categorias[cat].forEach(p=>{
+      const d = document.createElement("div");
+      d.className="produto";
+
+      d.innerHTML=`
+        <img src="${p.foto}">
+        <div>${p.nome}</div>
+        <div>R$ ${p.preco.toFixed(2)}</div>
+        <button class="botao add">Adicionar</button>
+        <button class="botao buy">Comprar</button>
+      `;
+
+      d.querySelector(".add").onclick=()=>{
+        carrinho.push(p);
+        total+=p.preco;
+        atualizar();
+      };
+
+      d.querySelector(".buy").onclick=()=>{
+        const msg = encodeURIComponent(
+          `🛍️ Pedido\\n• ${p.nome} - R$ ${p.preco.toFixed(2)}`
+        );
+        window.open("https://wa.me/5511948523462?text="+msg);
+      };
+
+      car.appendChild(d);
+    });
+
+    document.getElementById("catalogo").appendChild(sec);
+  });
+
+});
 </script>
 
 </body>
 </html>
-  
