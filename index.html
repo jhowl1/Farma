@@ -23,21 +23,6 @@ body { font-family: Arial; margin:0; background:#fff8f5; }
   font-weight:bold;
 }
 
-#destaque-produto {
-  margin:20px;
-  padding:20px;
-  background:#fff;
-  border-radius:12px;
-  text-align:center;
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
-}
-
-#destaque-produto img {
-  width:100%;
-  max-height:250px;
-  object-fit:contain;
-}
-
 .categoria { margin:20px; }
 .categoria h2 { color:#b85c5c; }
 
@@ -124,7 +109,6 @@ body { font-family: Arial; margin:0; background:#fff8f5; }
 🔥 TUDO 50% OFF • 🚚 Frete a partir de R$ 8 • 💳 Pix e Cartão
 </div>
 
-<div id="destaque-produto"></div>
 <div id="catalogo"></div>
 
 <div id="icone">🛒 <span id="count">0</span></div>
@@ -161,7 +145,6 @@ const url = "https://docs.google.com/spreadsheets/d/14jIYmfNIoLSxvnBuHMByplsNXLt
 
 let carrinho = [];
 let total = 0;
-let produtoDestaque = null;
 
 document.getElementById("icone").onclick = () => {
   const c = document.getElementById("carrinho");
@@ -246,25 +229,7 @@ function abrirWhats(){
   window.open("https://wa.me/5511948523462");
 }
 
-// prova social
-setInterval(()=>{
-  const nomes = ["Maria","João","Ana","Carlos"];
-  const nome = nomes[Math.floor(Math.random()*nomes.length)];
-
-  const aviso = document.createElement("div");
-  aviso.innerText = `${nome} acabou de comprar!`;
-  aviso.style.position="fixed";
-  aviso.style.bottom="80px";
-  aviso.style.left="20px";
-  aviso.style.background="#b85c5c";
-  aviso.style.color="#fff";
-  aviso.style.padding="10px";
-  aviso.style.borderRadius="8px";
-
-  document.body.appendChild(aviso);
-  setTimeout(()=>aviso.remove(),3000);
-},8000);
-
+// 🔥 PUXAR PLANILHA
 fetch(url)
 .then(r=>r.text())
 .then(data=>{
@@ -274,30 +239,28 @@ fetch(url)
   const categorias = {};
 
   rows.forEach(r=>{
+
+    if (!r.c[0]?.v) return; // ignora cabeçalho
+
     const nome = r.c[0]?.v;
     const foto = r.c[1]?.v;
     const preco = parseFloat(r.c[3]?.v)||0;
-    const status = r.c[4]?.v?.toLowerCase();
+
+    // 🔥 STATUS CORRIGIDO (FUNCIONA MESMO)
+    const status = (r.c[4]?.v || r.c[4]?.f || "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    if (status.includes("indispon")) return;
+
     const cat = r.c[5]?.v || "Outros";
-
-    if(status==="indisponível") return;
-
-    if(!produtoDestaque && preco>0){
-      produtoDestaque = {nome,foto,preco};
-    }
 
     if(!categorias[cat]) categorias[cat]=[];
     categorias[cat].push({nome,foto,preco});
   });
-
-  if(produtoDestaque){
-    document.getElementById("destaque-produto").innerHTML = `
-      <h2>🔥 Mais Vendido</h2>
-      <img src="${produtoDestaque.foto}">
-      <h3>${produtoDestaque.nome}</h3>
-      <p>R$ ${produtoDestaque.preco.toFixed(2)}</p>
-    `;
-  }
 
   Object.keys(categorias).forEach(cat=>{
     const sec = document.createElement("div");
